@@ -1,0 +1,25 @@
+name: Install Qt
+on: push
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - id: Qt
+        uses: jurplel/install-qt-action@v3.3.0
+      - uses: actions/checkout@v3
+      - id: MinGW
+        uses: egor-tensin/setup-mingw@v2.2.0
+        with:
+          platform: x64
+      - name: compile
+      - run: cd src
+      - run: sed -i "s/CONFIG += c++11/QMAKE_CXXFLAGS += -std=gnu++0x/g" LogAnalyzer.pro
+      - run: "echo #define RELEASE \"GHA\" > release.h"
+      - run: qmake LogAnalyzer.pro -r -spec win32-g++
+      - run: mingw32-make
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: LogAnalyzer
+          path: release\LogAnalyzer.exe
+            
