@@ -29,7 +29,7 @@ jobs:
           echo '#define RELEASE "GHA"' > release.h
           qmake LogAnalyzer.pro -r -spec win32-g++
           mingw32-make
-          copy LogAnalyzer.exe ..\build-systems\appveyor\ /y
+          copy LogAnalyzer.exe ..\build-systems\appveyor\
           cd ..\build-systems\appveyor\
           windeployqt --release LogAnalyzer.exe
       - name: Upload Artifact
