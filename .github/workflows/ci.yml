@@ -14,7 +14,7 @@ jobs:
           arch: 'win32_mingw53'
           cache: true
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Install MinGW
@@ -38,8 +38,8 @@ jobs:
       - name: Get short SHA
         run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
       - name: Upload Artifact
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: LogAnalyzer_${{ env.SHORT_SHA }}
-          path: build-systems\appveyor
+          path: build-systems\appveyor\release
             
