@@ -24,7 +24,7 @@ jobs:
         run: |
           cd src
           sed -i "s/CONFIG += c++11/QMAKE_CXXFLAGS += -std=gnu++0x/g" LogAnalyzer.pro
-          "echo #define RELEASE \"GHA\" > release.h"
+          echo "#define RELEASE \\"GHA\\"" > release.h
           qmake LogAnalyzer.pro -r -spec win32-g++
           mingw32-make
       - name: Upload Artifact
