@@ -1,10 +1,10 @@
-name: Build LogAnalizer
+name: LogAnalizer CI (Windows)
 on: push
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - id: Qt
+      - name: Install Qt
         uses: jurplel/install-qt-action@v3.3.0
         with:
           aqtversion: '==3.1.*'
@@ -13,28 +13,33 @@ jobs:
           target: 'desktop'
           arch: 'win32_mingw53'
           cache: true
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v3
         with:
           submodules: recursive
-      - id: MinGW
+      - name: Install MinGW
         uses: egor-tensin/setup-mingw@v2.2.0
         with:
           platform: x86
           version: 12.2.0
-      - name: cmds
+      - name: Windows Build
         run: |
           cd src
           sed -i "s/CONFIG += c++11/QMAKE_CXXFLAGS += -std=gnu++0x/g" LogAnalyzer.pro
           echo '#define RELEASE "GHA"' > release.h
           qmake LogAnalyzer.pro -r -spec win32-g++
           mingw32-make
-          copy release\LogAnalyzer.exe ..\build-systems\appveyor\
-          cd ..\build-systems\appveyor\
+          md ..\build-systems\appveyor\release
+          copy release\LogAnalyzer.exe ..\build-systems\appveyor\release
+          cd ..\build-systems\appveyor\release
           windeployqt --release LogAnalyzer.exe
+          copy ..\libwinpthread-1.dll .
+          copy ..\libstdc++-6.dll .
+      - name: Get short SHA
+        run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 7))" >> $env:GITHUB_ENV
       - name: Upload Artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: LogAnalyzer
+          name: LogAnalyzer_${{ env.SHORT_SHA }}
           path: build-systems\appveyor
             
