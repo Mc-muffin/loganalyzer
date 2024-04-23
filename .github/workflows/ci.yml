@@ -15,6 +15,8 @@ jobs:
           cache: true
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - id: MinGW
         uses: egor-tensin/setup-mingw@v2.2.0
         with:
