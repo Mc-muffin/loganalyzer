@@ -7,14 +7,18 @@ jobs:
       - id: Qt
         uses: jurplel/install-qt-action@v3.3.0
         with:
-          arch: win32_mingw53
+          aqtversion: '==3.1.*'
+          version: '5.10.1'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win32_mingw53'
           cache: true
       - name: Checkout
         uses: actions/checkout@v3
       - id: MinGW
         uses: egor-tensin/setup-mingw@v2.2.0
         with:
-          platform: x64
+          platform: x86
           version: 12.2.0
       - name: cmds
         run: |
